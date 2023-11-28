@@ -23,7 +23,7 @@ class App extends React.Component {
       orderId: '유니크한-주문번호',
       amount: 1004,
       goodsName: '나이스페이-상품',
-      returnUrl: 'http://localhost:3000/serverAuth',
+      returnUrl: process.env.REACT_APP_REDIRECT_URL,
       fnError: function (result) {
         alert('개발자확인용 : ' + result.errorMsg + '');
       },
