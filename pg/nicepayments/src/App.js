@@ -1,4 +1,5 @@
 import React from 'react';
+
 import './App.css';
 
 class App extends React.Component {
@@ -15,8 +16,9 @@ class App extends React.Component {
   }
 
   setupNicePay = () => {
+    console.log(process.env.REACT_APP_CLIENT_KEY);
     window.AUTHNICE.requestPay({
-      clientId: 'S2_af4543a0be4d49a98122e01ec2059a56',
+      clientId: process.env.REACT_APP_CLIENT_KEY,
       method: 'card',
       orderId: '유니크한-주문번호',
       amount: 1004,
