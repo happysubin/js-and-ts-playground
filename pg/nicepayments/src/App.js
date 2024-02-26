@@ -20,7 +20,7 @@ class App extends React.Component {
     window.AUTHNICE.requestPay({
       clientId: process.env.REACT_APP_CLIENT_KEY,
       method: 'card',
-      orderId: '유니크한-주문번호',
+      orderId: '4',
       amount: 1004,
       goodsName: '나이스페이-상품',
       returnUrl: process.env.REACT_APP_REDIRECT_URL,
