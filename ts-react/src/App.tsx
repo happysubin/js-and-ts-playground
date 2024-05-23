@@ -1,54 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import axios, { AxiosResponse } from 'axios';
-import { Button } from 'antd';
+import React, { useState } from 'react'
+import Modal from "./modal/Modal"
 
+const App: React.FC = () => {
+  const [showModal, setShowModal] = useState(false)
 
-interface ApiResponse {
-  message: string;
-  count: number;
-}
+  const handleOpenModal = (): void => {
+    setShowModal(true);
+  };
 
-const fetchData = async (): Promise<AxiosResponse<ApiResponse>> => {
-  const data: AxiosResponse<ApiResponse> = await axios.get("http://localhost:8080/cnt");
-  return data;
-}
-
-const countHandler = () => {
-  console.log("handler")
-}
-
-function App() {
-  const [data, setData] = useState<ApiResponse | null>(null);
-
-  useEffect(() => {
-    const fetchDataAndUpdateState = async () => {
-      try {
-        const response = await fetchData();
-        setData(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchDataAndUpdateState();
-  }, []);
-
-  console.log(data); // 데이터 확인용, 실제로는 UI에 표시하거나 다른 처리를 해야 할 것입니다.
+  const handleCloseModal = (): void => {
+    setShowModal(false);
+  };
 
   return (
-    <div>
-      <h1>API Data</h1>
-      {data ? (
-        <div>
-          <p>Message: {data.message}</p>
-          <p>Count: {data.count}</p>
-          <Button onClick={countHandler}>ㅁㄴㅇㄹ</Button>
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
-  );
+      <div>
+        <h1>React TS Modal Example</h1>
+        <button onClick={handleOpenModal}>Open Modal</button>
+        <Modal show={showModal} onClose={handleCloseModal}>
+          <h2>Modal Title</h2>
+          <p> This is a simple Modal</p>
+        </Modal>
+      </div>
+  )
 }
 
-export default App;
+export default App
