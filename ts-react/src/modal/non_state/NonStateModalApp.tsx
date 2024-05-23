@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import Modal from "./modal/Modal"
+import Modal from "./Modal"
 
-const App: React.FC = () => {
+const NonStateModalApp: React.FC = () => {
   const [showModal, setShowModal] = useState(false)
 
   const handleOpenModal = (): void => {
@@ -24,4 +24,4 @@ const App: React.FC = () => {
   )
 }
 
-export default App
+export default NonStateModalApp

@@ -1,5 +1,5 @@
 import React, {PropsWithChildren} from 'react'
-import './Modal.css'
+import '../Modal.css'
 
 interface ModalProps {
     show: boolean
