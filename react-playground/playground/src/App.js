@@ -1,60 +1,64 @@
-import styled from "styled-components"
+import React, { useState, useEffect } from "react";
+import { Stomp } from "@stomp/stompjs";
 
-const Father = styled.div`
-  display: flex;
-`
+const WebSocketExample = () => {
+    const [stompClient, setStompClient] = useState(null);
+    const [messages, setMessages] = useState([]);
 
-const Box = styled.div`
-  background-color: ${(props) => props.bgColor};
-  width: 100px;
-  height: 100px;
-`
+    useEffect(() => {
+        // WebSocket 연결 설정
+        const socketUrl = "ws://localhost:8099/ws/alarm"; // STOMP를 사용하는 WebSocket 서버 URL
+        const stompClient = Stomp.client(socketUrl);
 
-const BoxOne = styled.div`
-  background-color: teal;
-  width: 100px;
-  height: 100px;
-`
+        stompClient.connect({}, (frame) => {
+            console.log("Connected: " + frame);
 
-const BoxTwo = styled.div`
-  background-color: tomato;
-  width: 100px;
-  height: 100px;
-`
+            // 특정 채널(예: /topic/messages) 구독
+            stompClient.subscribe("/ch/1", (message) => {
+                if (message.body) {
+                    setMessages((prevMessages) => [...prevMessages, message.body]);
+                }
+            });
+        });
 
-const Text = styled.span`
-  color: white;
-`
+        // 컴포넌트 언마운트 시 WebSocket 연결 해제
+        return () => {
+            if (stompClient) {
+                stompClient.disconnect(() => {
+                    console.log("Disconnected");
+                });
+            }
+        };
+    }, []);
 
-const Circle = styled(Box)`
-  border-radius: 50px;
-`
+    const sendMessage = (msg) => {
+        if (stompClient && stompClient.connected) {
+            // 서버로 메시지 전송
+            stompClient.send("/app/chat", {}, msg); // "/app/chat"은 메시지를 처리할 엔드포인트
+        }
+    };
 
-const Button = styled.button`
-  color: white;
-  background-color: tomato;
-  border: 0;
-  border-radius: 15px;
-`
+    return (
+        <div>
+            <h1>STOMP WebSocket Example</h1>
+            <input
+                type="text"
+                placeholder="Enter a message"
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        sendMessage(e.target.value);
+                        e.target.value = "";
+                    }
+                }}
+            />
+            <h2>Received Messages:</h2>
+            <ul>
+                {messages.map((msg, index) => (
+                    <li key={index}>{msg}</li>
+                ))}
+            </ul>
+        </div>
+    );
+};
 
-const Link = styled(Button)``
-
-const Input = styled.input.attrs({required:true, minLength:10 })`
-  background-color: blue;
-`
-
-function App() {
-  return (
-    <Father as = "header">
-      <Box bgColor="teal">
-        <Text>Hello</Text>
-      </Box>
-      <Circle bgColor="tomato"/>
-      <Button as="a" href="/">Login</Button>  //a 태그로 활용됨
-      <Input></Input>
-    </Father>
-  )
- 
-}
-
-export default App;
+export default WebSocketExample;
